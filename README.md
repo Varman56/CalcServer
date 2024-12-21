@@ -31,8 +31,10 @@
 ***
 ### Примеры
 Опишем несколько рабочих запросов:
-1. ```
-curl -X POST -H "Content-Type: application/json" -d "{\"expression\": \"22*2\"}" http://localhost:8080/api/v1/calculate```
+1.
+```
+curl -X POST -H "Content-Type: application/json" -d "{\"expression\": \"22*2\"}" http://localhost:8080/api/v1/calculate
+```
 Получим ответ: ```{"result":44}``` - код 200
 2. ```
 curl -X POST -H "Content-Type: application/json" -d "{\"expression\": \"22/0\"}" http://localhost:8080/api/v1/calculate```
