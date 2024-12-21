@@ -43,7 +43,7 @@ func TryMarshalError(e error) ([]byte, int) {
 		errBytes, _ := json.Marshal(ans)
 		return errBytes, http.StatusInternalServerError
 	}
-	return jsonBytes, http.StatusBadRequest
+	return jsonBytes, http.StatusUnprocessableEntity
 }
 
 func TryMarshalData(num float64) ([]byte, int) {
@@ -60,6 +60,7 @@ func TryMarshalData(num float64) ([]byte, int) {
 func CalcHandler(w http.ResponseWriter, r *http.Request) {
 	request := new(Request)
 	defer r.Body.Close()
+	w.Header().Set("Content-Type", "application/json")
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
 		jsonBytes, status := TryMarshalError(ErrInvalidInput)
@@ -94,6 +95,7 @@ func CalcHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, ErrPartsWrtie.Error(), http.StatusInternalServerError)
 		return
 	}
+	w.WriteHeader(http.StatusOK)
 }
 
 func RunServer() error {

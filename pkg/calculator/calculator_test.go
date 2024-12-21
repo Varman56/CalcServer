@@ -6,7 +6,7 @@ import (
 )
 
 func TestCalc(t *testing.T) {
-	testCasesSuccess := []struct {
+	testCases := []struct {
 		name           string
 		expression     string
 		expectedResult float64
@@ -35,12 +35,6 @@ func TestCalc(t *testing.T) {
 			expression:     "1/2",
 			expectedResult: 0.5,
 			wantError:      false,
-		},
-		{
-			name:           "/0",
-			expression:     "24/0",
-			expectedResult: 0,
-			wantError:      true,
 		},
 		{
 			name:           "brackets 1",
@@ -120,9 +114,45 @@ func TestCalc(t *testing.T) {
 			expectedResult: -30.0721649485,
 			wantError:      false,
 		},
+		{
+			name:           "division by zero",
+			expression:     "24/0",
+			expectedResult: 0,
+			wantError:      true,
+		},
+		{
+			name:           "incorrect count of brackets",
+			expression:     "((2+3)",
+			expectedResult: 0,
+			wantError:      true,
+		},
+		{
+			name:           "multiple operands in a row",
+			expression:     "2++3",
+			expectedResult: 0,
+			wantError:      true,
+		},
+		{
+			name:           "invalid expression",
+			expression:     "",
+			expectedResult: 0,
+			wantError:      true,
+		},
+		{
+			name:           "failure to convert to float64",
+			expression:     "2+2..2",
+			expectedResult: 0,
+			wantError:      true,
+		},
+		{
+			name:           "undefined operand",
+			expression:     "2&3",
+			expectedResult: 0,
+			wantError:      true,
+		},
 	}
 	const EPS = 1e-9
-	for _, testCase := range testCasesSuccess {
+	for _, testCase := range testCases {
 		t.Run(testCase.name, func(t *testing.T) {
 			val, err := Calc(testCase.expression)
 			if err != nil && !testCase.wantError {
@@ -130,6 +160,9 @@ func TestCalc(t *testing.T) {
 			}
 			if !testCase.wantError && math.Abs(val-testCase.expectedResult) > EPS {
 				t.Fatalf("%f should be equal %f", val, testCase.expectedResult)
+			}
+			if err == nil && testCase.wantError {
+				t.Fatalf("bad case %s don't return error", testCase.expression)
 			}
 		})
 	}

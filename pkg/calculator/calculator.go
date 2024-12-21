@@ -76,6 +76,10 @@ func (e *Arithmetic) ParsingExpression() {
 			}
 			result_expression = append(result_expression, Token{operand: ')'})
 		case isOperand(symbol):
+			if len(result_expression) > 0 && !result_expression[len(result_expression)-1].is_num && isOperand(result_expression[len(result_expression)-1].operand) {
+				e.setError(ErrMultipleOperands)
+				return
+			}
 			result_expression = append(result_expression, Token{operand: symbol})
 		case unicode.IsDigit(symbol):
 			last_digit_index = index + 1
@@ -93,7 +97,7 @@ func (e *Arithmetic) ParsingExpression() {
 			result_expression = append(result_expression, Token{is_num: true, num: num})
 			index = last_digit_index - 1
 		default:
-			e.setError(ErrInvalidExpression)
+			e.setError(ErrUndefinedOperand)
 			return
 		}
 	}
