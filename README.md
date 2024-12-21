@@ -35,16 +35,22 @@
 ```
 curl -X POST -H "Content-Type: application/json" -d "{\"expression\": \"22*2\"}" http://localhost:8080/api/v1/calculate
 ```
-Получим ответ: ```{"result":44}``` - код 200
-2. ```
-curl -X POST -H "Content-Type: application/json" -d "{\"expression\": \"22/0\"}" http://localhost:8080/api/v1/calculate```
-Получим ответ: ```{"error":"division by zero"}``` - код 422
-3. ```
-curl -X POST -H "Content-Type: application/json" http://localhost:8080/api/v1/calculate```
-Получим ответ: ```{"error":"invalid json request"}``` - код 500
-4. ```
-curl -X POST -H "Content-Type: application/json" -d "{\"expression\": \"((22.2/2)*3)*(-7)\"}" http://localhost:8080/api/v1/calculate```
-Получим ответ: ```{"result":-233.09999999999997}``` - код 200 
+Получим ответ: ```{"result":44}``` - код 200  
+2.
+```
+curl -X POST -H "Content-Type: application/json" -d "{\"expression\": \"22/0\"}" http://localhost:8080/api/v1/calculate
+```
+Получим ответ: ```{"error":"division by zero"}``` - код 422  
+3.
+```
+curl -X POST -H "Content-Type: application/json" http://localhost:8080/api/v1/calculate
+```
+Получим ответ: ```{"error":"invalid json request"}``` - код 500  
+4.
+```
+curl -X POST -H "Content-Type: application/json" -d "{\"expression\": \"((22.2/2)*3)*(-7)\"}" http://localhost:8080/api/v1/calculate
+```
+Получим ответ: ```{"result":-233.09999999999997}``` - код 200  
 ## Принцип работы
 ### Калькулятор
 Реализовывает интерфейс выражения, в нашем случае - арифметического. В начале строка разбивается на токены (отдельные части выражения), затем рекурсивно (по скобкам) высчитывается, через дополнительную функцию подсчёта операций одного приоритета
