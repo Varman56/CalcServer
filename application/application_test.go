@@ -65,8 +65,8 @@ func TestCalcHandlerBadRequestCase(t *testing.T) {
 		CalcHandler(w, req)
 		res := w.Result()
 		defer res.Body.Close()
-		if res.StatusCode != http.StatusUnprocessableEntity {
-			t.Fatalf("Test: %s\nhandler returned wrong status code: got %v want %v", testCase.name, res.StatusCode, http.StatusUnprocessableEntity)
+		if res.StatusCode != testCase.wantBadRequest {
+			t.Fatalf("Test: %s\nhandler returned wrong status code: got %v want %v", testCase.name, res.StatusCode, testCase.wantBadRequest)
 		} else {
 			var reqResult AnswerBad
 			err := json.Unmarshal(w.Body.Bytes(), &reqResult)
@@ -197,8 +197,8 @@ func TestCalcHandlerSuccessCase(t *testing.T) {
 		CalcHandler(w, req)
 		res := w.Result()
 		defer res.Body.Close()
-		if res.StatusCode != http.StatusOK {
-			t.Fatalf("Test: %s\nhandler returned wrong status code: got %v want %v", testCase.name, res.StatusCode, http.StatusOK)
+		if res.StatusCode != testCase.wantBadRequest {
+			t.Fatalf("Test: %s\nhandler returned wrong status code: got %v want %v", testCase.name, res.StatusCode, testCase.wantBadRequest)
 		} else {
 			var reqResult AnswerOk
 			err := json.Unmarshal(w.Body.Bytes(), &reqResult)

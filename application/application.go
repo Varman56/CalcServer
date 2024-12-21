@@ -43,7 +43,11 @@ func TryMarshalError(e error) ([]byte, int) {
 		errBytes, _ := json.Marshal(ans)
 		return errBytes, http.StatusInternalServerError
 	}
-	return jsonBytes, http.StatusUnprocessableEntity
+	status := http.StatusUnprocessableEntity
+	if res.Error == "internal server error" || res.Error == "wrtied only part of data" || res.Error == "invalid json request" {
+		status = http.StatusInternalServerError
+	}
+	return jsonBytes, status
 }
 
 func TryMarshalData(num float64) ([]byte, int) {
@@ -88,11 +92,13 @@ func CalcHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	n, err := w.Write(jsonBytes)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		jsonBytes, status := TryMarshalError(ErrServer)
+		http.Error(w, string(jsonBytes), status)
 		return
 	}
 	if n != len(jsonBytes) {
-		http.Error(w, ErrPartsWrtie.Error(), http.StatusInternalServerError)
+		jsonBytes, status := TryMarshalError(ErrPartsWrtie)
+		http.Error(w, string(jsonBytes), status)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
